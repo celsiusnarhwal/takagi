@@ -162,8 +162,8 @@ async def create_tokens(
             }
         )
 
-    if "email" in scopes:
-        identity_claims["email"] = user_info["email"]
+    if "email" in scopes and user_info.get("email"):
+        identity_claims.update({"email": user_info["email"], "email_verified": True})
 
     if "groups" in scopes:
         organizations = (
@@ -172,15 +172,14 @@ async def create_tokens(
             .json()
         )
 
-        identity_claims["groups"] = [str(org["id"]) for org in organizations]
+        if organizations:
+            identity_claims["groups"] = [str(org["id"]) for org in organizations]
 
     if nonce is not None:
         identity_claims["nonce"] = nonce
 
     access_info = TakagiAccessInfo(
         token=github_token,
-        client_id=github.client_id,
-        client_secret=github.client_secret,
         scopes=scopes,
     )
 
