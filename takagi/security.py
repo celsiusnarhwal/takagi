@@ -70,6 +70,7 @@ def get_rsa_key() -> KeySet:
     """
     return settings().rsa_key or _get_key("RSA")
 
+
 def get_oct_key() -> KeySet:
     """
     Get the octet sequence key, creating it if necessary.
