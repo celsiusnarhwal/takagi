@@ -91,7 +91,7 @@ def root(request: Request):
 
     redirects = {
         "repo": "https://github.com/celsiusnarhwal/takagi",
-        "settings": "https://discord.com/settings/account",
+        "settings": "https://github.com/settings",
         "docs": request.url_for("docs"),
     }
 
