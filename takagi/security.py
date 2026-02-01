@@ -68,20 +68,13 @@ def get_rsa_key() -> KeySet:
     """
     Get the RSA key, creating it if necessary.
     """
-    if settings().rsa_key:
-        return settings().rsa_key
-
-    return _get_key("RSA")
-
+    return settings().rsa_key or _get_key("RSA")
 
 def get_oct_key() -> KeySet:
     """
     Get the octet sequence key, creating it if necessary.
     """
-    if settings().oct_key:
-        return settings().oct_key
-
-    return _get_key("oct")
+    return settings().oct_key or _get_key("oct")
 
 
 def create_jwt(claims: dict) -> str:
