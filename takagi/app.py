@@ -30,7 +30,7 @@ from takagi.serializable import (
 )
 from takagi.settings import settings
 
-# TODO enforce grant type(?)
+# TODO enforce grant and response types(?)
 app = FastAPI(
     title="Takagi",
     description="Takagi lets you use GitHub as an OpenID Connect provider. "
@@ -439,12 +439,8 @@ async def userinfo(
     except (JoseError, ValueError):
         raise HTTPException(401)
 
-    github = utils.get_oauth_client(
-        client_id=access_info.client_id, client_secret=access_info.client_secret
-    )
-
     new_tokens = await security.create_tokens(
-        github=github,
+        github=utils.get_oauth_client(),
         github_token=access_info.token,
         scopes=access_info.scopes,
         oidc_metadata=oidc_metadata,

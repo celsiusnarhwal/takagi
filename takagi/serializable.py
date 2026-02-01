@@ -82,8 +82,6 @@ class TakagiAuthorizationData(JWT):
 
 class TakagiAccessInfo(BaseModel):
     token: dict
-    client_id: str
-    client_secret: str
     scopes: list[str]
 
 
