@@ -104,7 +104,7 @@ def create_jwe(data: str) -> str:
 
 def decrypt_jwe(data: str) -> str:
     """
-    Decode a JWE-encrypted string.
+    Decrypt a JWE-encrypted string.
     """
     return jwe.decrypt_compact(data, get_oct_key()).plaintext.decode()
 
