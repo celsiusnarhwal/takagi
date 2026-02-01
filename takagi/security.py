@@ -102,11 +102,17 @@ def decode_jwt(token: str, **claims: dict) -> Token:
 
 
 def create_jwe(data: str) -> str:
+    """
+    Create a JWE-encrypted string.
+    """
     return jwe.encrypt_compact({"alg": "dir", "enc": "A256GCM"}, data, get_oct_key())
 
 
 def decrypt_jwe(data: str) -> str:
-    return jwe.decrypt_compact(data, get_oct_key()).plaintext
+    """
+    Decode a JWE-encrypted string.
+    """
+    return jwe.decrypt_compact(data, get_oct_key()).plaintext.decode()
 
 
 def get_jwks() -> KeySet:
