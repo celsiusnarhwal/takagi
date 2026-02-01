@@ -25,7 +25,7 @@ want to set the `TAKAGI_ALLOWED_HOSTS` environment variable; see [Configuration]
 
 <details>
 <summary>Supported tags</summary>
-<br>
+<br/>
 
 | **Name**             | **Description**                                                                            | **Example**                                                                      |
 |----------------------|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
