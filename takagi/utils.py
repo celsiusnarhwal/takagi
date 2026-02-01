@@ -70,7 +70,7 @@ def is_secure_transport(url: str | URL) -> bool:
 
 def client_is_allowed(client_id: int) -> bool:
     """
-    Return `True` if the given client ID is allowed per `SNOWFLAKE_ALLOWED_CLIENTS`; `False` otherwise.
+    Return `True` if the given client ID is allowed per `TAKAGI_ALLOWED_CLIENTS`; `False` otherwise.
     """
     return bool({client_id, "*"}.intersection(settings().allowed_clients))
 
