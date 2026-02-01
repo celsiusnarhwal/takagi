@@ -92,9 +92,9 @@ class TakagiAccessToken(JWT):
     aud: str
     iat: int
     exp: int
-    encrypted_access_info: str
+    token: str
 
     @property
     def access_info(self) -> TakagiAccessInfo:
-        decrypted = security.decrypt_jwe(self.encrypted_access_info)
+        decrypted = security.decrypt_jwe(self.token)
         return TakagiAccessInfo.model_validate_json(decrypted)

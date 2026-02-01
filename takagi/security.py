@@ -189,7 +189,7 @@ async def create_tokens(
         aud=oidc_metadata["userinfo_endpoint"],
         iat=now.int_timestamp,
         exp=expiry.int_timestamp,
-        encrypted_access_info=create_jwe(access_info.model_dump_json()),
+        token=create_jwe(access_info.model_dump_json()),
     )
 
     tokens = {
