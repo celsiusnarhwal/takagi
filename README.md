@@ -71,9 +71,9 @@ ghcr.io/celsiusnarhwal/takagi:latest
 First, [create an OAuth application in your GitHub developer settings](https://github.com/settings/applications/new). 
 Put in whatever you want for the application name and homepage URL.
 
-For the **authorization callback URL**, you must set it to `https://takagi.example.com/r/{YOUR_REDIRECT_URI}`,
-where `{YOUR_REDIRECT_URI}` is the actual intended redirect URI for your application. For example, a redirect
-URI of `https://myapp.example.com/callback` would be set as as 
+For the **authorization callback URL**, you must set it to `https://takagi.example.com/r/{YOUR_CALLBACK_URL}`,
+where `{YOUR_CALLBACK_URL}` is the actual intended callback URL for your application. For example, a redirect
+URL of `https://myapp.example.com/callback` would be set as as 
 `https://takagi.example.com/r/https://myapp.example.com/callback`.
 
 > [!tip]
