@@ -1,0 +1,5 @@
+*
+!takagi/
+!pyproject.toml
+!uv.lock
+!.git

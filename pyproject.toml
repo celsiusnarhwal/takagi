@@ -1,0 +1,33 @@
+[project]
+name = "takagi"
+authors = [
+    { name = "celsius narhwal", email = "hello@celsiusnarhwal.dev" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "authlib>=1.6.6",
+    "dnspython>=2.7.0",
+    "durationpy>=0.9",
+    "fastapi[all]>=0.115.12",
+    "joserfc>=1.0.4",
+    "pendulum>=3.1.0",
+    "pydantic-settings>=2.9.1",
+    "pydantic[email]>=2.11.4",
+    "scalar-fastapi>=1.6.0",
+]
+dynamic = ["version"]
+
+[project.scripts]
+keygen = "takagi.cli:keygen"
+
+[tool.pdm.version]
+source = "scm"
+fallback_version = "0.0.0"
+
+[tool.ruff.lint]
+ignore = ["F403"]
+extend-select = ["I"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
