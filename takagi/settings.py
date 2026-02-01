@@ -122,7 +122,7 @@ class TakagiSettings(BaseSettings):
         try:
             oct_key = next(key for key in keyset if isinstance(key, OctKey))
         except StopIteration:
-            raise ValueError(f"{variable_name} must contain an octet swquence key")
+            raise ValueError(f"{variable_name} must contain an octet sequence key")
 
         if rsa_key.alg != "RS256":
             raise ValueError(f"The RSA key in {variable_name} must be an RS256 key")
