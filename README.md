@@ -200,7 +200,7 @@ docker run ghcr.io/celsiusnarhwal/takagi keygen
 
 The output of this command can be supplied to `TAKAGI_KEYSET` as-is.
 
-It's possible to compose a value for the variable yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/cd7c4b619f16e2aae109013c9519ce2ad0d6af9d/takagi/settings.py#L104).
+It's possible to compose a value for the variable yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/07b2f42ff9eccf3011a9c84bd47cb69899da4fcb/takagi/settings.py#L104).
 I recommend you use the command instead.
 
 <details>
