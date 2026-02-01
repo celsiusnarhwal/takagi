@@ -108,7 +108,7 @@ Frankly, if you're reading this then you should already know how this works.
 |-----------|-------------------------------------------------------------------------------------------------------|---------------|
 | `openid`  | To authenticate using OpenID Connect.                                                                 | Yes           |
 | `profile` | Basic information about the user's GitHub account.                                                    | No            |
-| `email`   | The email address associated with the user's GitHub account and whether or not it is verified.        | No            |
+| `email`   | The public email address associated with the user's GitHub account.                                   | No            |
 | `groups`  | A list of IDs of organizations the user is a member of and has authorized your application to access. | No            |
 
 ### Supported Claims
