@@ -104,12 +104,12 @@ Frankly, if you're reading this then you should already know how this works.
 
 ### Supported Scopes
 
-| **Scope** | **Requests**                                                                                     | **Required?** |
-|-----------|--------------------------------------------------------------------------------------------------|---------------|
-| `openid`  | To authenticate using OpenID Connect.                                                            | Yes           |
-| `profile` | Basic information about the user's GitHub account.                                               | No            |
-| `email`   | The email address associated with the user's GitHub account and whether or not it is verified.   | No            |
-| `groups`  | A list of IDs of organizations the user is a member of and has made visible to your application. | No            |
+| **Scope** | **Requests**                                                                                          | **Required?** |
+|-----------|-------------------------------------------------------------------------------------------------------|---------------|
+| `openid`  | To authenticate using OpenID Connect.                                                                 | Yes           |
+| `profile` | Basic information about the user's GitHub account.                                                    | No            |
+| `email`   | The email address associated with the user's GitHub account and whether or not it is verified.        | No            |
+| `groups`  | A list of IDs of organizations the user is a member of and has authorized your application to access. | No            |
 
 ### Supported Claims
 
@@ -136,7 +136,7 @@ Depending on the provided scopes, Takagi-issued ID tokens include some subset of
 | `profile`            | The URL of the user's GitHub profile.                                                                                                                                                                              | `profile`                                     |
 | `updated_at`         | The [Unix time](https://en.wikipedia.org/wiki/Unix_time) at which the user's profile information was last updated.                                                                                                 | `profile`                                     |
 | `email`              | The pubilc email address associated with the user's GitHub profile. If the user has not set a public email address, this claim will not be present.                                                                | `email`                                       |
-| `email_verified`     | Whether the email address associated with the user's GitHub account is verified.                                                                                                                                   | `email`                                       |
+| `email_verified`     | Whether the public email address associated with the user's GitHub account is verified. If the user has not set a public email address, this claim will not be present.                                            | `email`                                       |
 | `groups`             | A list of IDs of organizations the user is a member of and has authorized your application to access. If the user does not authorize your application to access any organizations, this claim will not be present. | `groups`                                      |
 | `nonce`              | If the `nonce` parameter was sent to the authorization endpoint, this claim will contain its value.                                                                                                                | None                                          |
 
