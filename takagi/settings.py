@@ -99,11 +99,6 @@ class TakagiSettings(BaseSettings):
 
         return hosts
 
-    @field_validator("enable_docs")
-    @classmethod
-    def validate_enable_docs(cls, v: bool, info: ValidationInfo) -> bool:
-        return v or info.data["root_redirect"] == "docs"
-
     @field_validator("keyset", mode="before")
     @classmethod
     def validate_keyset(cls, v: str) -> KeySet:
@@ -146,6 +141,11 @@ class TakagiSettings(BaseSettings):
         logging.getLogger("uvicorn").info("Takagi is using a custom private keyset.")
 
         return keyset
+
+    @field_validator("enable_docs")
+    @classmethod
+    def validate_enable_docs(cls, v: bool, info: ValidationInfo) -> bool:
+        return v or info.data["root_redirect"] == "docs"
 
 
 @lru_cache
