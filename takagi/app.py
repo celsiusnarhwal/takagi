@@ -435,18 +435,18 @@ async def userinfo(
             aud={"essential": True, "value": oidc_metadata["userinfo_endpoint"]},
         )
 
-        auth_info = access_token.access_info
+        access_info = access_token.access_info
     except (JoseError, ValueError):
         raise HTTPException(401)
 
     github = utils.get_oauth_client(
-        client_id=auth_info.client_id, client_secret=auth_info.client_secret
+        client_id=access_info.client_id, client_secret=access_info.client_secret
     )
 
     new_tokens = await security.create_tokens(
         github=github,
-        github_token=auth_info.token,
-        scopes=auth_info.scopes,
+        github_token=access_info.token,
+        scopes=access_info.scopes,
         oidc_metadata=oidc_metadata,
     )
 
