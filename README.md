@@ -160,12 +160,6 @@ Takagi-issued access tokens include the following claims:
 The `/userinfo` endpoint returns the same claims as ID tokens but does not include `iss`, `aud`,
 `iat`, `exp`, or `nonce`.
 
-### PKCE Support
-
-For applications that cannot securely store a client secret, Takagi supports the
-[PKCE-enhanced authorization code flow](https://datatracker.ietf.org/doc/html/rfc7636).
-Make sure the `Public Client` option is enabled in your GitHub application's OAuth2 settings.
-
 ### WebFinger Support
 
 Takagi provides a [WebFinger](https://en.wikipedia.org/wiki/WebFinger) endpoint at `/.well-known/webfinger`
