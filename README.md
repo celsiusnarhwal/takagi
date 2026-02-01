@@ -89,11 +89,6 @@ directly to obtain the same claims.
 
 Frankly, if you're reading this then you should already know how this works.
 
-> [!important]
-> By default, tokens issued by Takagi do not expire.[^1] This mirrors the behavior of GitHub OAuth2 access tokens, which
-> also do not expire. If you would like Takagi-issued tokens to expire, set the `TAKAGI_TOKEN_LIFETIME`
-> environment variable (see [Configuration](#configuration)).
-
 ## OIDC Information
 
 ### Endpoints
@@ -117,6 +112,11 @@ Frankly, if you're reading this then you should already know how this works.
 | `groups`  | A list of IDs of organizations the user is a member of and has made visible to your application. | No            |
 
 ### Supported Claims
+
+> [!important]
+> By default, tokens issued by Takagi do not expire.[^1] This mirrors the behavior of GitHub OAuth2 access tokens, which
+> also do not expire. If you would like Takagi-issued tokens to expire, set the `TAKAGI_TOKEN_LIFETIME`
+> environment variable (see [Configuration](#configuration)).
 
 #### ID Tokens
 
