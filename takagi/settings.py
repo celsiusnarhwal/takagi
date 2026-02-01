@@ -135,7 +135,7 @@ class TakagiSettings(BaseSettings):
 
         if oct_key.alg != "A256GCM":
             raise ValueError(
-                f"{variable_name} must contain an A256GCM octet sequence key"
+                f"The octet seqeunce key in {variable_name} must be an A256GCM key"
             )
 
         if not oct_key.check_use("enc"):
