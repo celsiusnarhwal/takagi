@@ -1,4 +1,6 @@
 import json
+import shutil
+from pathlib import Path
 
 from joserfc.jwk import KeySet, OctKey, RSAKey
 
@@ -15,3 +17,7 @@ def keygen():
     keyset = KeySet([rsa_key, oct_key])
 
     print(json.dumps(keyset.as_dict(private=True)))
+
+
+def rotate():
+    shutil.rmtree(Path(__file__).parent / "data" / "keys", ignore_errors=True)

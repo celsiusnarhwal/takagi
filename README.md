@@ -193,16 +193,20 @@ By default, Takagi writes its private keys to `/app/takagi/data`, which you are 
 `/app/takagi/data` isn't possible, or if you'd just prefer to keep the private keys in an environment variable rather 
 than have them persisted to the disk.
 
-Takagi provides a command to generate private keys:
+Takagi provides a command to generate private keys:[^5]
 
 ```shell
-docker run ghcr.io/celsiusnarhwal/takagi keygen
+docker exec takagi keygen
 ```
 
 The output of this command can be supplied to `TAKAGI_KEYSET` as-is.
 
 It's possible to compose a value for the variable yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/07b2f42ff9eccf3011a9c84bd47cb69899da4fcb/takagi/settings.py#L104).
 I recommend you use the command instead.
+
+> [!warning]
+> Switching from Takagi-managed private keys to custom private keys (or vice versa) will invalidate any active 
+> Takagi-issued tokens and cause any authorizations in-process to fail.
 
 <details>
 <summary>For reference, a suitable value for the variable looks like this (click to expand):</summary>
@@ -243,6 +247,21 @@ I recommend you use the command instead.
 If `TAKAGI_KEYSET` is set, there's no need to mount `/app/takagi/data`. On startup, Takagi
 will log a message affirming that a custom private keyset is in use.
 
+## Key Rotation
+
+If you think Takagi's private keys have been compromised, you can rotate them with the following command:[^]
+
+```shell
+docker exec takagi rotate
+```
+
+This only has any effect if Takagi is using its own automatically-generated private keys. If you're using custom
+private keys, you'll have to change the value of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
+
+> [!warning]
+> Doing this will invalidate any active Takagi-issued tokens and cause any authorizations in-process to fail.
+
+
 ## Configuration
 
 Takagi is configurable through the following environment variables (all optional):
@@ -276,3 +295,4 @@ Uvicorn will respect most[^3] of [its own environment variables](https://www.uvi
 authorization endpoint and the callback endpoint recieves an `error` parameter with a value of `access_denied`, 
 Takagi will redirect to the URL that was given by `Referer` at the authorization endpoint.
 
+[^5]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.

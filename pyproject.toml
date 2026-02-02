@@ -19,6 +19,7 @@ dynamic = ["version"]
 
 [project.scripts]
 keygen = "takagi.cli:keygen"
+rotate = "takagi.cli:rotate"
 
 [tool.pdm.version]
 source = "scm"
