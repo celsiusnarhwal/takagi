@@ -126,18 +126,18 @@ class TakagiSettings(BaseSettings):
         keyset = KeySet.import_key_set(keyset_dict)
 
         if len(keyset.keys) != 2:
-            raise ValueError("Custom private keysets must contain exactly two keys")
+            raise ValueError("A custom private keyset must contain exactly two keys")
 
         try:
             rsa_key = next(key for key in keyset if isinstance(key, RSAKey))
         except StopIteration:
-            raise ValueError("Custom private keysets must contain an RSA key")
+            raise ValueError("A custom private keyset must contain an RSA key")
 
         try:
             oct_key = next(key for key in keyset if isinstance(key, OctKey))
         except StopIteration:
             raise ValueError(
-                "Custom private keysets must contain an octet sequence key"
+                "A custom private keyset must contain an octet sequence key"
             )
 
         if rsa_key.alg != "RS256":
@@ -152,12 +152,12 @@ class TakagiSettings(BaseSettings):
 
         if not rsa_key.is_private:
             raise ValueError(
-                "The RSA key in custom private keyset must be a private key"
+                "The RSA key in a custom private keyset must be a private key"
             )
 
         if oct_key.alg != "A256GCM":
             raise ValueError(
-                "The octet seqeunce key in custom private keyset must be an A256GCM key"
+                "The octet sequence key in a custom private keyset must be an A256GCM key"
             )
 
         if oct_key.get("use") != "enc":
