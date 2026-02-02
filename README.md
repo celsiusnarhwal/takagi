@@ -199,9 +199,7 @@ docker exec takagi keygen
 Second, you'll need to provide the key to Takagi in one — and only one — of two ways:
 
 1. As the value of the `TAKAGI_KEYSET` environment variable. This may be useful in serverless enviroments where mounting `/app/takagi` isn't possible.
-2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET_FILE`. This file cannot be located within `/app/takagi`. The allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
-
-Setting both `TAKAGI_KEYSET` and `TAKAGI_KEYSET_FILE` will cause an error and prevent Takagi from starting.
+2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET`. This file cannot be located within `/app/takagi`. The allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
 
 > [!warning]
 > Switching from Takagi-managed private keys to custom private keys (or vice versa) will invalidate any active 
@@ -243,7 +241,7 @@ Setting both `TAKAGI_KEYSET` and `TAKAGI_KEYSET_FILE` will cause an error and pr
 
 </details>
 
-If `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` are set, there's no need to mount `/app/takagi/data`. On startup, Takagi
+If `TAKAGI_KEYSET` is set, there's no need to mount `/app/takagi/data`. On startup, Takagi
 will log a message affirming that a custom private keyset is in use.
 
 ## Key Rotation
@@ -255,7 +253,7 @@ docker exec takagi rotate
 ```
 
 This only has any effect if Takagi is its managing its own keys. If you're using custom private keys, you'll have to 
-change of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
+change them manually.
 
 > [!warning]
 > Doing this will invalidate any active Takagi-issued tokens and cause any in-process authorizations to fail.
@@ -276,8 +274,7 @@ Takagi is configurable through the following environment variables (all optional
 | `TAKAGI_TREAT_LOOPBACK_AS_SECURE` | Boolean  | Whether Takagi will consider loopback addresses (e.g., `localhost`) to be secure even if they don't use HTTPS.                                                                                                                                                                                                                                                                                      | `true`                    |
 | `TAKAGI_RETURN_TO_REFERRER`       | Boolean  | If this is `true` and the user denies an authorization request, Takagi will redirect the user back to the initiating URL.[^4] Otherwise, Takagi behaves according to [OpenID Connect Core 1.0 § 3.1.2.6](https://openid.net/specs/openid-connect-core-1_0.html#AuthError).                                                                                                                          | `false`                   |
 | `TAKAGI_ALLOWED_WEBFINGER_HOSTS`  | String   | A comma-separated lists of domains allowed in `acct:` URIs sent to Takagi's WebFinger endpoint. The endpoint will return an HTTP 404 error for URIs with domains not permitted by this setting.<br/><br/> Wildcard domains (e.g., `*.example.com`) are supported, but the unqualified wildcard (`*`) is not.                                                                                        | N/A                       |
-| `TAKAGI_KEYSET`                   | String   | See [Custom Private Keys](#custom-private-keys). Mutally exclusive with `TAKAGI_KEYSET_FILE`.                                                                                                                                                                                                                                                                                                       | N/A                       |
-| `TAKAGI_KEYSET_FILE`              | String   | See [Custom Private Keys](#custom-private-keys). Mutally exclusive with `TAKAGI_KEYSET`.                                                                                                                                                                                                                                                                                                            |                           |
+| `TAKAGI_KEYSET`                   | String   | A private keyset or a path to a file containing one. See [Custom Private Keys](#custom-private-keys).                                                                                                                                                                                                                                                                                               | N/A                       |
 | `TAKAGI_ENABLE_DOCS`              | Boolean  | Whether to serve Takagi's interactive API documentation at `/docs`. This also controls whether Takagi's [OpenAPI](https://spec.openapis.org/oas/latest.html) schema is served at `/openapi.json`.<br/><br/>This is forced to be `true` if `TAKAGI_ROOT_REDIRECT` is set to `docs`.                                                                                                                  | `true`                    |
 
 <br>

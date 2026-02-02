@@ -2,6 +2,7 @@ import json
 import logging
 import typing as t
 from functools import lru_cache
+from json import JSONDecodeError
 from pathlib import Path
 
 import dns.name
@@ -11,6 +12,7 @@ from pydantic import (
     BaseModel,
     BeforeValidator,
     Field,
+    TypeAdapter,
     field_validator,
 )
 from pydantic_core.core_schema import ValidationInfo
@@ -47,8 +49,7 @@ class TakagiSettings(BaseSettings):
     allowed_webfinger_hosts: t.Annotated[list[dns.name.Name], NoDecode] = Field(
         default_factory=list, validate_default=False
     )
-    keyset_file: Path = Field(None, validate_default=False)
-    keyset: t.Annotated[KeySet, NoDecode] | None = Field(None)
+    keyset: t.Annotated[KeySet, NoDecode] = Field(None, validate_default=False)
     enable_docs: bool = True
 
     private: TakagiPrivateSettings = Field(default_factory=TakagiPrivateSettings)
@@ -101,36 +102,28 @@ class TakagiSettings(BaseSettings):
 
         return hosts
 
-    @field_validator("keyset_file")
-    @classmethod
-    def validate_keyset_file(cls, v: Path) -> Path:
-        variable_name = "TAKAGI_KEYSET_FILE"
-
-        if not v.is_absolute():
-            raise ValueError(f"{variable_name} must be a absolute path")
-
-        v = v.resolve()
-
-        if str(v).startswith((str(Path(__file__).parent.resolve()))):
-            raise ValueError("TAKAGI_KEYSET_FILE cannot be located within /app/takagi")
-
-        KeySet.import_key_set(json.load(v.open()))
-        return v
-
     @field_validator("keyset", mode="before")
     @classmethod
-    def validate_keyset(cls, v: str, info: ValidationInfo) -> KeySet:
-        if keyset_file := info.data.get("keyset_file"):
-            if v is not None:
+    def validate_keyset(cls, v: str) -> KeySet:
+        try:
+            keyset_dict = json.loads(v)
+        except JSONDecodeError:
+            keyset_file = TypeAdapter(Path).validate_python(v)
+
+            if not keyset_file.is_absolute():
+                raise ValueError("If TAKAGI_KEYSET is a path, it must be absolute")
+
+            if str(keyset_file.resolve()).startswith(str(Path(__file__).parent)):
                 raise ValueError(
-                    "You cannot provide both TAKAGI_KEYSET and TAKAGI_KEYSET_FILE"
+                    "If TAKAGI_KEYSET is a path, it cannot be located within /app/takagi"
                 )
 
-            keyset = KeySet.import_key_set(json.load(keyset_file.open()))
-        elif v is None:
-            return v
-        else:
-            keyset = KeySet.import_key_set(json.loads(v))
+            try:
+                keyset_dict = json.load(keyset_file.open())
+            except Exception as e:
+                raise ValueError(e.args)
+
+        keyset = KeySet.import_key_set(keyset_dict)
 
         if len(keyset.keys) != 2:
             raise ValueError("Custom private keysets must contain exactly two keys")
@@ -152,9 +145,9 @@ class TakagiSettings(BaseSettings):
                 "The RSA key in a custom private keyset must be an RS256 key"
             )
 
-        if rsa_key.check_use("sig") is not None:
+        if rsa_key.get("use") != "sig":
             raise ValueError(
-                "The RSA key in a custom private keyset must support signing"
+                "The RSA key in a custom private keyset must explicitly support signing"
             )
 
         if not rsa_key.is_private:
@@ -167,9 +160,9 @@ class TakagiSettings(BaseSettings):
                 "The octet seqeunce key in custom private keyset must be an A256GCM key"
             )
 
-        if oct_key.check_use("enc") is not None:
+        if oct_key.get("use") != "enc":
             raise ValueError(
-                "The octet sequence key in a custom private keyset must support encryption"
+                "The octet sequence key in a custom private keyset must explicitly support encryption"
             )
 
         logging.getLogger("uvicorn").info("Takagi is using a custom private keyset.")
