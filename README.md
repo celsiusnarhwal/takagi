@@ -296,6 +296,6 @@ authorization endpoint and the callback endpoint recieves an `error` parameter w
 Takagi will redirect to the URL that was given by `Referer` at the authorization endpoint.
 
 [^5]: It's possible to create a key yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/07b2f42ff9eccf3011a9c84bd47cb69899da4fcb/takagi/settings.py#L104).
-I recommend you use the command instead.
+I recommend you use `takagi keygen` instead.
 
 [^6]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.
