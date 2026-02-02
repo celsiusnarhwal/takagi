@@ -12,10 +12,12 @@ class TokenResponse(BaseModel, title="Token"):
 
 class UserInfoResponse(BaseModel, title="User Info"):
     sub: str = Field(title="Subject")
-    name: str = None
     preferred_username: str = None
-    locale: str = None
+    name: str = None
+    nickname: str = None
     picture: HttpUrl = None
+    profile: HttpUrl = None
+    updated_at: int = None
     email: str = None
     email_verified: bool = None
     groups: list[str] = None

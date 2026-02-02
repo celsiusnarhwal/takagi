@@ -427,13 +427,11 @@ async def userinfo(
     oidc_metadata = utils.get_discovery_info(request)
 
     try:
-        access_token = TakagiAccessToken.from_jwt(
+        access_info = TakagiAccessToken.from_jwt(
             credentials.credentials,
             iss={"essential": True, "value": oidc_metadata["issuer"]},
             aud={"essential": True, "value": oidc_metadata["userinfo_endpoint"]},
-        )
-
-        access_info = access_token.access_info
+        ).access_info
     except (JoseError, ValueError):
         raise HTTPException(401)
 
@@ -446,17 +444,7 @@ async def userinfo(
 
     user_info = security.decode_jwt(new_tokens["id_token"])
 
-    userinfo_claims = {
-        k: v
-        for k, v in user_info.claims.items()
-        if k in oidc_metadata["claims_supported"]
-    }
-
-    # This should not be possible but you never know.
-    if not userinfo_claims:
-        raise HTTPException(403)
-
-    return userinfo_claims
+    return user_info.claims
 
 
 @app.get("/.well-known/jwks.json", summary="JWKS", response_model=r.JWKSResponse)
