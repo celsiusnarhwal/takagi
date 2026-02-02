@@ -196,7 +196,7 @@ First, you'll need to generate a suitable private key[^5] using the following co
 docker exec takagi keygen
 ```
 
-Second, you'll need to provide the key to Takagi in one — and only one — of two ways:
+Second, you'll need to provide the key to Takagi in one of two ways:
 
 1. As the value of the `TAKAGI_KEYSET` environment variable. This may be useful in serverless enviroments where mounting `/app/takagi` isn't possible.
 2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET`. This file cannot be located within `/app/takagi`. The allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
