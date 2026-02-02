@@ -442,9 +442,9 @@ async def userinfo(
         oidc_metadata=oidc_metadata,
     )
 
-    user_info = security.decode_jwt(new_tokens["id_token"])
+    id_token = security.decode_jwt(new_tokens["id_token"])
 
-    return user_info.claims
+    return id_token.claims
 
 
 @app.get("/.well-known/jwks.json", summary="JWKS", response_model=r.JWKSResponse)
