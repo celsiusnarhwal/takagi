@@ -199,7 +199,7 @@ docker exec takagi keygen
 Second, you'll need to provide the key to Takagi in one of two ways:
 
 1. As the value of the `TAKAGI_KEYSET` environment variable. This may be useful in serverless enviroments where mounting `/app/takagi` isn't possible.
-2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET`. This file cannot be located within `/app/takagi`. The allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
+2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET`. This file cannot be located within `/app/takagi`. This allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
 
 > [!warning]
 > Switching from Takagi-managed private keys to custom private keys (or vice versa) will invalidate any active 
