@@ -208,7 +208,7 @@ Setting both `TAKAGI_KEYSET` and `TAKAGI_KEYSET_FILE` will cause an error and pr
 > Takagi-issued tokens and cause any authorizations in-process to fail.
 
 <details>
-<summary>For reference, a suitable value for the variable looks like this (click to expand):</summary>
+<summary>For reference, a suitable private keyset looks like this (click to expand):</summary>
 <br/>
 
 ```json5
