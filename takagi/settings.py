@@ -47,7 +47,7 @@ class TakagiSettings(BaseSettings):
         default_factory=list, validate_default=False
     )
     keyset: t.Annotated[KeySet, NoDecode] = Field(None, validate_default=False)
-    enable_docs: bool = False
+    enable_docs: bool = True
 
     private: TakagiPrivateSettings = Field(default_factory=TakagiPrivateSettings)
 
