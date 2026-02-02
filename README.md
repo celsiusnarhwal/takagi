@@ -255,7 +255,7 @@ docker exec takagi rotate
 ```
 
 This only has any effect if Takagi is its managing its own keys. If you're using custom private keys, you'll have to 
-change of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
+change `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
 
 > [!warning]
 > Doing this will invalidate any active Takagi-issued tokens and cause any in-process authorizations to fail.
