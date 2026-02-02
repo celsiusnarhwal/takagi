@@ -255,8 +255,8 @@ If you think Takagi's private keys have been compromised, you can rotate them wi
 docker exec takagi rotate
 ```
 
-This only has any effect if Takagi is using its own automatically-generated private keys. If you're using custom
-private keys, you'll have to change the value of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
+This only has any effect if Takagi is its managing its own keys. If you're using custom private keys, you'll have to 
+change the value of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
 
 > [!warning]
 > Doing this will invalidate any active Takagi-issued tokens and cause any authorizations in-process to fail.
