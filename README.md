@@ -188,21 +188,20 @@ For more information, see [Uvicorn's documentation](https://www.uvicorn.org/depl
 > This is an advanced feature most users won't need.
 
 By default, Takagi writes its private keys to `/app/takagi/data`, which you are instructed to mount on your host machine 
-(see [Installation](#installation)). As an alternative to this, Takagi allows you to provide your own private keys via the 
-`TAKAGI_KEYSET` environment variable. This may be useful, for example, in environments where mounting 
-`/app/takagi/data` isn't possible, or if you'd just prefer to keep the private keys in an environment variable rather 
-than have them persisted to the disk.
+(see [Installation](#installation)). As an alternative to this, Takagi allows you to provide keys externally.
 
-Takagi provides a command to generate private keys:[^5]
+First, you'll need to generate a suitable private key[^5] using the following command:[^6]
 
 ```shell
 docker exec takagi keygen
 ```
 
-The output of this command can be supplied to `TAKAGI_KEYSET` as-is.
+Second, you'll need to provide the key to Takagi in one — and only one — of two ways:
 
-It's possible to compose a value for the variable yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/07b2f42ff9eccf3011a9c84bd47cb69899da4fcb/takagi/settings.py#L104).
-I recommend you use the command instead.
+1. As the value of the `TAKAGI_KEYSET` environment variable. This may be useful in serverless enviroments where mounting `/app/takagi` isn't possible.
+2. As a file mounted into Takagi's container whose path is provided via `TAKAGI_KEYSET_FILE`. This file cannot be located within `/app/takagi`. The allows for compatibility with [Docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
+
+Setting both `TAKAGI_KEYSET` and `TAKAGI_KEYSET_FILE` will cause an error and prevent Takagi from starting.
 
 > [!warning]
 > Switching from Takagi-managed private keys to custom private keys (or vice versa) will invalidate any active 
@@ -244,12 +243,12 @@ I recommend you use the command instead.
 
 </details>
 
-If `TAKAGI_KEYSET` is set, there's no need to mount `/app/takagi/data`. On startup, Takagi
+If `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` are set, there's no need to mount `/app/takagi/data`. On startup, Takagi
 will log a message affirming that a custom private keyset is in use.
 
 ## Key Rotation
 
-If you think Takagi's private keys have been compromised, you can rotate them with the following command:[^]
+If you think Takagi's private keys have been compromised, you can rotate them with the following command:[^6]
 
 ```shell
 docker exec takagi rotate
@@ -277,7 +276,8 @@ Takagi is configurable through the following environment variables (all optional
 | `TAKAGI_TREAT_LOOPBACK_AS_SECURE` | Boolean  | Whether Takagi will consider loopback addresses (e.g., `localhost`) to be secure even if they don't use HTTPS.                                                                                                                                                                                                                                                                                      | `true`                    |
 | `TAKAGI_RETURN_TO_REFERRER`       | Boolean  | If this is `true` and the user denies an authorization request, Takagi will redirect the user back to the initiating URL.[^4] Otherwise, Takagi behaves according to [OpenID Connect Core 1.0 § 3.1.2.6](https://openid.net/specs/openid-connect-core-1_0.html#AuthError).                                                                                                                          | `false`                   |
 | `TAKAGI_ALLOWED_WEBFINGER_HOSTS`  | String   | A comma-separated lists of domains allowed in `acct:` URIs sent to Takagi's WebFinger endpoint. The endpoint will return an HTTP 404 error for URIs with domains not permitted by this setting.<br/><br/> Wildcard domains (e.g., `*.example.com`) are supported, but the unqualified wildcard (`*`) is not.                                                                                        | N/A                       |
-| `TAKAGI_KEYSET`                   | String   | See [Custom Private Keys](#custom-private-keys).                                                                                                                                                                                                                                                                                                                                                    | N/A                       |
+| `TAKAGI_KEYSET`                   | String   | See [Custom Private Keys](#custom-private-keys). Mutally exclusive with `TAKAGI_KEYSET_FILE`.                                                                                                                                                                                                                                                                                                       | N/A                       |
+| `TAKAGI_KEYSET_FILE`              | String   | See [Custom Private Keys](#custom-private-keys). Mutally exclusive with `TAKAGI_KEYSET`.                                                                                                                                                                                                                                                                                                            |                           |
 | `TAKAGI_ENABLE_DOCS`              | Boolean  | Whether to serve Takagi's interactive API documentation at `/docs`. This also controls whether Takagi's [OpenAPI](https://spec.openapis.org/oas/latest.html) schema is served at `/openapi.json`.<br/><br/>This is forced to be `true` if `TAKAGI_ROOT_REDIRECT` is set to `docs`.                                                                                                                  | `true`                    |
 
 <br>
@@ -295,4 +295,7 @@ Uvicorn will respect most[^3] of [its own environment variables](https://www.uvi
 authorization endpoint and the callback endpoint recieves an `error` parameter with a value of `access_denied`, 
 Takagi will redirect to the URL that was given by `Referer` at the authorization endpoint.
 
-[^5]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.
+[^5]: It's possible to create a key yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/07b2f42ff9eccf3011a9c84bd47cb69899da4fcb/takagi/settings.py#L104).
+I recommend you use the command instead.
+
+[^6]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.
