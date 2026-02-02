@@ -417,8 +417,6 @@ async def userinfo(
     This endpoint recieves an access token via HTTP Bearer authentication and returns current information about
     the authorized user's GitHub account.
 
-
-
     Only `sub` is guaranteed to be present in the response. The presence of other claims is dependent on the scopes
     the token was granted with.
 
