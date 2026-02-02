@@ -292,7 +292,7 @@ Uvicorn will respect most[^3] of [its own environment variables](https://www.uvi
 authorization endpoint and the callback endpoint recieves an `error` parameter with a value of `access_denied`, 
 Takagi will redirect to the URL that was given by `Referer` at the authorization endpoint.
 
-[^5]: It's possible to create a key yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/1cee10feeb7bfab282931a66a286ef68889e023b/takagi/settings.py#L135).
+[^5]: It's possible to create a key yourself, but there are [several requirements](https://github.com/celsiusnarhwal/takagi/blob/b994b06c5128d69dd3508c0f899032949ceebc00/takagi/settings.py#L106).
 I recommend you use `takagi keygen` instead.
 
 [^6]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.
