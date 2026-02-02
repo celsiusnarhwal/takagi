@@ -205,7 +205,7 @@ Setting both `TAKAGI_KEYSET` and `TAKAGI_KEYSET_FILE` will cause an error and pr
 
 > [!warning]
 > Switching from Takagi-managed private keys to custom private keys (or vice versa) will invalidate any active 
-> Takagi-issued tokens and cause any authorizations in-process to fail.
+> Takagi-issued tokens and cause any in-process authorizations to fail.
 
 <details>
 <summary>For reference, a suitable private keyset looks like this (click to expand):</summary>
@@ -255,10 +255,10 @@ docker exec takagi rotate
 ```
 
 This only has any effect if Takagi is its managing its own keys. If you're using custom private keys, you'll have to 
-change the value of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
+change of `TAKAGI_KEYSET` or `TAKAGI_KEYSET_FILE` manually.
 
 > [!warning]
-> Doing this will invalidate any active Takagi-issued tokens and cause any authorizations in-process to fail.
+> Doing this will invalidate any active Takagi-issued tokens and cause any in-process authorizations to fail.
 
 
 ## Configuration
