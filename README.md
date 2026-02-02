@@ -1,6 +1,6 @@
 # Takagi
 
-Takagi enables you to use [GitHub](https://github.com) as
+Takagi enables you to use GitHub as
 an [OpenID Connect](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol) (OIDC) provider. With it, you
 can use GitHub to identify your application's users without needing to implement specific support for GitHub's OAuth2
 API.
