@@ -1,6 +1,5 @@
 import json
 import typing as t
-from json import JSONDecodeError
 from pathlib import Path
 
 import pendulum
@@ -59,7 +58,7 @@ def _get_key(key_type: t.Literal["RSA", "oct"]) -> KeySet:
 
     try:
         return KeySet.import_key_set(json.load(key_file.open()))
-    except (FileNotFoundError, JSONDecodeError, JoseError):
+    except (FileNotFoundError, json.JSONDecodeError, JoseError):
         _create_key(key_type)
         return _get_key(key_type)
 

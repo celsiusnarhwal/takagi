@@ -2,7 +2,6 @@ import json
 import logging
 import typing as t
 from functools import lru_cache
-from json import JSONDecodeError
 from pathlib import Path
 
 import dns.name
@@ -107,7 +106,7 @@ class TakagiSettings(BaseSettings):
     def validate_keyset(cls, v: str) -> KeySet:
         try:
             keyset_dict = json.loads(v)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             keyset_file = TypeAdapter(Path).validate_python(v)
 
             if not keyset_file.is_absolute():
