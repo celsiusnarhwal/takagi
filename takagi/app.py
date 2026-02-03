@@ -148,18 +148,12 @@ async def authorize(
         str,
         Query(
             title="Redirect URI",
-            description="If provided, either this must point to Takagi's [callback endpoint](#GET/r/{redirect_uri}) or "
-            "`TAKAGI_FIX_REDIRECT_URIS` must be `true`.",
+            description="This must point to Takagi's [callback endpoint](#GET/r/{redirect_uri})."
+            if not settings().fix_redirect_uris
+            else "",
         ),
-    ] = None,
-    state: t.Annotated[
-        str,
-        Query(
-            description="While optional, it is "
-            "[highly recommended](https://discord.com/developers/docs/topics/oauth2#state-and-security) "
-            "to supply this parameter.",
-        ),
-    ] = None,
+    ],
+    state: str = None,
     nonce: str = None,
     referrer: t.Annotated[
         str | None, Header(alias="referer", include_in_schema=False)
@@ -316,20 +310,8 @@ async def token(
             title="Authorization Code",
         ),
     ],
-    client_id: t.Annotated[
-        str,
-        Form(
-            title="Client ID",
-            description="Required unless client credentials are provided via HTTP Basic authentication.",
-        ),
-    ] = None,
-    client_secret: t.Annotated[
-        str,
-        Form(
-            description="Required for non-public clients unless client credentials are provided via HTTP Basic "
-            "authentication."
-        ),
-    ] = None,
+    client_id: t.Annotated[str, Form(title="Client ID")] = None,
+    client_secret: t.Annotated[str, Form()] = None,
     redirect_uri: t.Annotated[
         str,
         Form(
@@ -341,7 +323,6 @@ async def token(
     Clients obtain tokens from this endpoint.
 
     The client ID and client secret may be provided via either form fields or HTTP Basic authentication, but not both.
-    Public clients using the PKCE-enhanced authorization code flow may omit the client secret entirely.
     """
     if (client_id or client_secret) and credentials:
         raise HTTPException(
@@ -356,6 +337,9 @@ async def token(
 
     if not client_id:
         raise HTTPException(400, "Client ID is required")
+
+    if not client_secret:
+        raise HTTPException(400, "Client secret is required")
 
     if not utils.client_is_allowed(client_id):
         raise HTTPException(400, f"Client ID {client_id} is not allowed")
