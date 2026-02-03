@@ -344,11 +344,11 @@ async def token(
     if not utils.client_is_allowed(client_id):
         raise HTTPException(400, f"Client ID {client_id} is not allowed")
 
-    oidc_metadata = utils.get_discovery_info(request)
-    github = utils.get_oauth_client(client_id=client_id, client_secret=client_secret)
-
     if not code:
         raise HTTPException(400, "Authorization code is required")
+
+    oidc_metadata = utils.get_discovery_info(request)
+    github = utils.get_oauth_client(client_id=client_id, client_secret=client_secret)
 
     authorization_data = TakagiAuthorizationData.from_jwt(code)
 
