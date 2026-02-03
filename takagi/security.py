@@ -161,8 +161,21 @@ async def create_tokens(
             }
         )
 
-    if "email" in scopes and user_info.get("email"):
-        identity_claims.update({"email": user_info["email"], "email_verified": True})
+    if "email" in scopes:
+        emails = (
+            (await github.get("/user/emails", token=github_token))
+            .raise_for_status()
+            .json()
+        )
+
+        primary_email = next(email for email in emails if email["primary"] is True)
+
+        identity_claims.update(
+            {
+                "email": primary_email["email"],
+                "email_verified": primary_email["verified"],
+            }
+        )
 
     if "groups" in scopes:
         organizations = (

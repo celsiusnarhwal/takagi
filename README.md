@@ -108,7 +108,7 @@ Frankly, if you're reading this then you should already know how this works.
 |-----------|-------------------------------------------------------------------------------------------------------|---------------|
 | `openid`  | To authenticate using OpenID Connect.                                                                 | Yes           |
 | `profile` | Basic information about the user's GitHub account.                                                    | No            |
-| `email`   | The public email address associated with the user's GitHub account.                                   | No            |
+| `email`   | The primary email address associated with the user's GitHub account.[^7]                              | No            |
 | `groups`  | A list of IDs of organizations the user is a member of and has authorized your application to access. | No            |
 
 ### Supported Claims
@@ -135,8 +135,8 @@ Depending on the provided scopes, Takagi-issued ID tokens include some subset of
 | `picture`            | The URL of the avatar of the user's GitHub account.                                                                                                                                                                | `profile`                                     |
 | `profile`            | The URL of the user's GitHub profile.                                                                                                                                                                              | `profile`                                     |
 | `updated_at`         | The [Unix time](https://en.wikipedia.org/wiki/Unix_time) at which the user's profile information was last updated.                                                                                                 | `profile`                                     |
-| `email`              | The pubilc email address associated with the user's GitHub profile. If the user has not set a public email address, this claim will not be present.                                                                | `email`                                       |
-| `email_verified`     | If the `email` claim is present, the value of this claim will be `true`.                                                                                                                                           | `email`                                       |
+| `email`              | The primary email address associated with the user's GitHub account.[^7]                                                                                                                                           | `email`                                       |
+| `email_verified`     | Whether the primary email address assocaited with the user's GitHub account is verified.                                                                                                                           | `email`                                       |
 | `groups`             | A list of IDs of organizations the user is a member of and has authorized your application to access. If the user does not authorize your application to access any organizations, this claim will not be present. | `groups`                                      |
 | `nonce`              | If the `nonce` parameter was sent to the authorization endpoint, this claim will contain its value.                                                                                                                | None                                          |
 
@@ -296,3 +296,6 @@ Takagi will redirect to the URL that was given by `Referer` at the authorization
 I recommend you use `takagi keygen` instead.
 
 [^6]: Assuming Takagi's container is named `takagi`. Docker Compose users can also use `docker compose exec`.
+
+[^7]: This is the email address at which the user recieves account-related notifications from GitHub. It is not
+necessarily the same as the email address publicly visible on the user's GitHub profile.
