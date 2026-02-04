@@ -102,6 +102,9 @@ Frankly, if you're reading this then you should already know how this works.
 | OIDC Discovery                  | `/.well-known/openid-configuration` |
 | [WebFinger](#webfinger-support) | `/.well-known/webfinger`            |
 
+This list is non-exhaustive. See Takagi's interactive API documentation at `https://takagi.example.com/docs`
+for the full list.
+
 ### Supported Scopes
 
 | **Scope** | **Requests**                                                                                          | **Required?** |

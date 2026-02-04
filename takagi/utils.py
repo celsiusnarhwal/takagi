@@ -1,5 +1,7 @@
 import typing as t
 
+import httpx
+
 # noinspection PyUnresolvedReferences
 from authlib.integrations.starlette_client import OAuth, StarletteOAuth2App
 from authlib.oauth2.rfc6749 import list_to_scope, scope_to_list
@@ -21,6 +23,13 @@ def get_oauth_client(**kwargs) -> StarletteOAuth2App:
         api_base_url="https://api.github.com",
         **kwargs,
     )
+
+
+def get_httpx_client() -> httpx.AsyncClient:
+    """
+    Create an HTTPX client for GitHub's API.
+    """
+    return httpx.AsyncClient(base_url="https://api.github.com")
 
 
 @validate_call

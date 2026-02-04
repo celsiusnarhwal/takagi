@@ -6,12 +6,15 @@ import pendulum
 
 # noinspection PyUnresolvedReferences
 from authlib.integrations.starlette_client import StarletteOAuth2App
+from fastapi.exceptions import HTTPException
+from fastapi.security import HTTPBasicCredentials
 from joserfc import jwe, jwt
 from joserfc.errors import JoseError
 from joserfc.jwk import KeySet
 from joserfc.jwt import Token
 from pydantic import validate_call
 
+from takagi import utils
 from takagi.serializable import TakagiAccessInfo, TakagiAccessToken
 from takagi.settings import settings
 
@@ -197,7 +200,6 @@ async def create_tokens(
 
     access_token = TakagiAccessToken(
         iss=oidc_metadata["issuer"],
-        aud=oidc_metadata["userinfo_endpoint"],
         iat=now.int_timestamp,
         exp=expiry.int_timestamp,
         token=create_jwe(access_info.model_dump_json()),
@@ -211,3 +213,34 @@ async def create_tokens(
     }
 
     return tokens
+
+
+@validate_call
+async def revoke(
+    *,
+    access_token: str,
+    credentials: HTTPBasicCredentials,
+    mode: t.Literal["token", "authorization"],
+    oidc_metadata: dict,
+):
+    try:
+        access_info = TakagiAccessToken.from_jwt(
+            access_token,
+            iss={"essential": True, "value": oidc_metadata["issuer"]},
+            aud={"essential": True, "value": oidc_metadata["issuer"]},
+        ).access_info
+    except (JoseError, ValueError):
+        raise HTTPException(401)
+
+    if not credentials.password:
+        raise HTTPException(400, "Client secret is required")
+
+    async with utils.get_httpx_client() as github:
+        (
+            await github.request(
+                method="DELETE",
+                url=f"/applications/{credentials.username}/{'token' if mode == 'token' else 'grant'}",
+                json={"access_token": access_info.token["access_token"]},
+                auth=(credentials.username, credentials.password),
+            )
+        ).raise_for_status()

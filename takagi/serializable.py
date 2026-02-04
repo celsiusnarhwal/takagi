@@ -87,10 +87,14 @@ class TakagiAccessInfo(BaseModel):
 
 class TakagiAccessToken(JWT):
     iss: str
-    aud: str
     iat: int
     exp: int
     token: str
+
+    @computed_field
+    @property
+    def aud(self) -> dict:
+        return self.iss
 
     @property
     def access_info(self) -> TakagiAccessInfo:

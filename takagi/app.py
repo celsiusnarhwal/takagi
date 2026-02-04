@@ -418,7 +418,7 @@ async def userinfo(
         access_info = TakagiAccessToken.from_jwt(
             credentials.credentials,
             iss={"essential": True, "value": oidc_metadata["issuer"]},
-            aud={"essential": True, "value": oidc_metadata["userinfo_endpoint"]},
+            aud={"essential": True, "value": oidc_metadata["issuer"]},
         ).access_info
     except (JoseError, ValueError):
         raise HTTPException(401)
@@ -433,6 +433,86 @@ async def userinfo(
     id_token = security.decode_jwt(new_tokens["id_token"])
 
     return id_token.claims
+
+
+@app.delete(
+    "/revoke",
+    summary="Token Revocation",
+    status_code=204,
+    responses={code: {"model": r.HTTPClientErrorResponse} for code in [401, 422]},
+)
+async def revoke(
+    request: Request,
+    credentials: t.Annotated[
+        HTTPBasicCredentials,
+        Depends(
+            HTTPBasic(
+                scheme_name="Client ID / Client Secret",
+                description="The GitHub application's client ID (username) and client secret (password).",
+            )
+        ),
+    ],
+    access_token: t.Annotated[
+        str,
+        Form(
+            title="Access Token",
+            description="An access token received from the `/token` endpoint.",
+        ),
+    ],
+):
+    """
+    This endpoint revokes a single access token.
+
+    > [!note]
+    > GitHub Docs: [Delete an app token](https://docs.github.com/en/rest/apps/oauth-applications?apiVersion=2022-11-28#delete-an-app-token)
+    """
+    await security.revoke(
+        mode="token",
+        access_token=access_token,
+        credentials=credentials,
+        oidc_metadata=utils.get_discovery_info(request),
+    )
+
+
+@app.delete(
+    "/deauthorize",
+    summary="Deauthorization",
+    status_code=204,
+    responses={
+        code: {"model": r.HTTPClientErrorResponse} for code in [400, 401, 404, 422]
+    },
+)
+async def deauthorize(
+    request: Request,
+    credentials: t.Annotated[
+        HTTPBasicCredentials,
+        Depends(
+            HTTPBasic(
+                scheme_name="Client ID / Client Secret",
+                description="The GitHub application's client ID (username) and client secret (password).",
+            )
+        ),
+    ],
+    access_token: t.Annotated[
+        str,
+        Form(
+            title="Access Token",
+            description="An access token received from the `/token` endpoint.",
+        ),
+    ],
+):
+    """
+    This endpoint revokes an app's authorization for the user associated with the provided access token.
+
+    > [!note]
+      GitHub Docs: [Delete an app authorization](https://docs.github.com/en/rest/apps/oauth-applications?apiVersion=2022-11-28#delete-an-app-authorization)
+    """
+    await security.revoke(
+        mode="authorization",
+        access_token=access_token,
+        credentials=credentials,
+        oidc_metadata=utils.get_discovery_info(request),
+    )
 
 
 @app.get("/.well-known/jwks.json", summary="JWKS", response_model=r.JWKSResponse)
