@@ -202,6 +202,12 @@ First, you'll need to generate a suitable private key[^5] using the following co
 docker exec takagi keygen
 ```
 
+Or, if you don't have a running Takagi instance:
+
+```shell
+docker run ghcr.io/celsiusnarhwal/takagi keygen
+```
+
 Second, you'll need to provide the key to Takagi in one of two ways:
 
 1. As the value of the `TAKAGI_KEYSET` environment variable. This may be useful in serverless enviroments where mounting `/app/takagi` isn't possible.
