@@ -21,7 +21,7 @@ want to set the `TAKAGI_ALLOWED_HOSTS` environment variable; see [Configuration]
 > Throughout this README, `takagi.example.com` will be used as a placeholder for the domain at which your
 > Takagi instace is reachable.
 
-After installing Takagi, I recommend you take a look at the interactive API documentation at
+After installing Takagi, I recommend taking a look at the interactive API documentation at
 `https://takagi.example.com/docs`.
 
 <hr>
