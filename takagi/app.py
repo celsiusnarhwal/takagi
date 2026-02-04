@@ -12,9 +12,7 @@ from fastapi.params import Query
 from fastapi.responses import JSONResponse, RedirectResponse, Response
 from fastapi.security import (
     HTTPAuthorizationCredentials,
-    HTTPBasic,
     HTTPBasicCredentials,
-    HTTPBearer,
 )
 from httpx import HTTPStatusError
 from joserfc.errors import JoseError
@@ -23,6 +21,7 @@ from scalar_fastapi import get_scalar_api_reference
 
 import takagi.responses as r
 from takagi import security, utils
+from takagi.auth import AccessToken, ClientCredentials
 from takagi.serializable import (
     TakagiAccessToken,
     TakagiAuthorizationData,
@@ -292,14 +291,7 @@ async def token(
     request: Request,
     credentials: t.Annotated[
         HTTPBasicCredentials,
-        Depends(
-            HTTPBasic(
-                auto_error=False,
-                scheme_name="Client ID / Client Secret",
-                description="The authenticating GitHub application's client ID (username) and "
-                "client secret (password).",
-            )
-        ),
+        Depends(ClientCredentials()),
     ],
     grant_type: t.Annotated[
         t.Literal["authorization_code"],
@@ -393,12 +385,7 @@ async def userinfo(
     request: Request,
     credentials: t.Annotated[
         HTTPAuthorizationCredentials,
-        Depends(
-            HTTPBearer(
-                scheme_name="Access Token",
-                description="An access token recieved from the `/token` endpoint.",
-            )
-        ),
+        Depends(AccessToken()),
     ],
 ):
     """
@@ -408,9 +395,10 @@ async def userinfo(
     Only `sub` is guaranteed to be present in the response. The presence of other claims is dependent on the scopes
     the token was granted with.
 
-    This endpoint also accepts `POST` requests per
-    [OpenID Connect Core 1.0 § 5.3](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). Usage is identical
-    to `GET`.
+    > [!note]
+      This endpoint also accepts `POST` requests per
+      [OpenID Connect Core 1.0 § 5.3](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo). Usage is
+      identical to `GET`.
     """
     oidc_metadata = utils.get_discovery_info(request)
 
@@ -435,26 +423,22 @@ async def userinfo(
     return id_token.claims
 
 
-@app.delete(
+@app.post(
     "/revoke",
     summary="Token Revocation",
-    status_code=204,
-    responses={code: {"model": r.HTTPClientErrorResponse} for code in [401, 422]},
+    responses={code: {"model": r.HTTPClientErrorResponse} for code in [400, 401, 404]},
 )
 async def revoke(
     request: Request,
     credentials: t.Annotated[
         HTTPBasicCredentials,
-        Depends(
-            HTTPBasic(
-                scheme_name="Client ID / Client Secret",
-                description="The GitHub application's client ID (username) and client secret (password).",
-            )
-        ),
+        Depends(ClientCredentials()),
     ],
     access_token: t.Annotated[
         str,
         Form(
+            alias="token",
+            validation_alias="token",
             title="Access Token",
             description="An access token received from the `/token` endpoint.",
         ),
@@ -462,9 +446,6 @@ async def revoke(
 ):
     """
     This endpoint revokes a single access token.
-
-    > [!note]
-    > GitHub Docs: [Delete an app token](https://docs.github.com/en/rest/apps/oauth-applications?apiVersion=2022-11-28#delete-an-app-token)
     """
     await security.revoke(
         mode="token",
@@ -474,28 +455,21 @@ async def revoke(
     )
 
 
-@app.delete(
+@app.post(
     "/deauthorize",
     summary="Deauthorization",
-    status_code=204,
-    responses={
-        code: {"model": r.HTTPClientErrorResponse} for code in [400, 401, 404, 422]
-    },
+    responses={code: {"model": r.HTTPClientErrorResponse} for code in [400, 401, 404]},
 )
 async def deauthorize(
     request: Request,
     credentials: t.Annotated[
         HTTPBasicCredentials,
-        Depends(
-            HTTPBasic(
-                scheme_name="Client ID / Client Secret",
-                description="The GitHub application's client ID (username) and client secret (password).",
-            )
-        ),
+        Depends(ClientCredentials()),
     ],
     access_token: t.Annotated[
         str,
         Form(
+            validation_alias="token",
             title="Access Token",
             description="An access token received from the `/token` endpoint.",
         ),
@@ -503,9 +477,6 @@ async def deauthorize(
 ):
     """
     This endpoint revokes an app's authorization for the user associated with the provided access token.
-
-    > [!note]
-      GitHub Docs: [Delete an app authorization](https://docs.github.com/en/rest/apps/oauth-applications?apiVersion=2022-11-28#delete-an-app-authorization)
     """
     await security.revoke(
         mode="authorization",
