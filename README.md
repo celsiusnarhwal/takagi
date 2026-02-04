@@ -21,6 +21,9 @@ want to set the `TAKAGI_ALLOWED_HOSTS` environment variable; see [Configuration]
 > Throughout this README, `takagi.example.com` will be used as a placeholder for the domain at which your
 > Takagi instace is reachable.
 
+After installing Takagi, I recommend you take a look at the interactive API documentation at
+`https://takagi.example.com/docs`.
+
 <hr>
 
 <details>
@@ -98,12 +101,11 @@ Frankly, if you're reading this then you should already know how this works.
 | Authorization                   | `/authorize`                        |
 | Token                           | `/token`                            |
 | User Info                       | `/userinfo`                         |
+| Revocation                      | `/revoke`                           |
+| Deauthorization                 | `/deauthorize`                      |
 | JSON Web Key Set                | `/.well-known/jwks.json`            |
 | OIDC Discovery                  | `/.well-known/openid-configuration` |
 | [WebFinger](#webfinger-support) | `/.well-known/webfinger`            |
-
-This list is non-exhaustive. See Takagi's interactive API documentation at `https://takagi.example.com/docs`
-for the full list.
 
 ### Supported Scopes
 
