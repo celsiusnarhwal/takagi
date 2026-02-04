@@ -23,6 +23,18 @@ class UserInfoResponse(BaseModel, title="User Info"):
     groups: list[str] = None
 
 
+class IntrospectionResponse(BaseModel, title="Introspection"):
+    active: bool
+    client_id: str = None
+    username: str = None
+    scope: str = None
+    sub: str = None
+    aud: str = None
+    iss: str = None
+    iat: int = None
+    exp: int = None
+
+
 class JWKSResponse(BaseModel, title="JSON Web Key Set"):
     class JWK(BaseModel, title="JSON Web Key"):
         n: str = Field(title="Modulus")

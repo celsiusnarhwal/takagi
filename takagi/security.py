@@ -195,6 +195,8 @@ async def create_tokens(
 
     access_info = TakagiAccessInfo(
         token=github_token,
+        client_id=github.client_id,
+        client_secret=github.client_secret,
         scopes=scopes,
     )
 
@@ -240,7 +242,7 @@ async def revoke(
             await github.request(
                 method="DELETE",
                 url=f"/applications/{credentials.username}/{'token' if mode == 'token' else 'grant'}",
-                json={"access_token": access_info.token["access_token"]},
+                json={"access_token": access_info.raw_token},
                 auth=(credentials.username, credentials.password),
             )
         ).raise_for_status()

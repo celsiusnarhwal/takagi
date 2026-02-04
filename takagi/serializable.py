@@ -82,7 +82,13 @@ class TakagiAuthorizationData(JWT):
 
 class TakagiAccessInfo(BaseModel):
     token: dict
+    client_id: str | None
+    client_secret: str | None
     scopes: list[str]
+
+    @property
+    def raw_token(self) -> str:
+        return self.token["access_token"]
 
 
 class TakagiAccessToken(JWT):

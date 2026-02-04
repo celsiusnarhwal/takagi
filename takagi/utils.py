@@ -92,7 +92,9 @@ def get_discovery_info(request: Request) -> dict:
         "issuer": str(request.base_url),
         "authorization_endpoint": str(request.url_for("authorize")),
         "token_endpoint": str(request.url_for("token")),
+        "revocation_endpoint": str(request.url_for("revoke")),
         "userinfo_endpoint": str(request.url_for("userinfo")),
+        "introspection_endpoint": str(request.url_for("introspect")),
         "jwks_uri": str(request.url_for("jwks")),
         "claims_supported": [
             "sub",
@@ -116,4 +118,6 @@ def get_discovery_info(request: Request) -> dict:
         "response_types_supported": ["code"],
         "subject_types_supported": ["public"],
         "scopes_supported": ["openid", "profile", "email", "groups"],
+        "code_challenge_methods_supported": ["S256"],
+        "service_documentation": "https://github.com/celsiusnarhwal/takagi",
     }

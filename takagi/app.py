@@ -2,7 +2,7 @@ import typing as t
 
 import dns.name
 from authlib.common.errors import AuthlibHTTPError
-from authlib.oauth2.rfc6749 import scope_to_list
+from authlib.oauth2.rfc6749 import list_to_scope, scope_to_list
 from fastapi import Depends, FastAPI, Form, Header, Request
 from fastapi.datastructures import URL
 from fastapi.exceptions import HTTPException
@@ -318,7 +318,7 @@ async def token(
     """
     Clients obtain tokens from this endpoint.
 
-    The client ID and client secret may be provided via either form fields or HTTP Basic authentication, but not both.
+    Client credentials may be provided via either form fields or HTTP Basic authentication, but not both.
     """
     if (client_id or client_secret) and credentials:
         raise HTTPException(
@@ -424,6 +424,63 @@ async def userinfo(
 
 
 @app.post(
+    "/introspect",
+    summary="Introspection",
+    response_model=r.IntrospectionResponse,
+    response_model_exclude_none=True,
+)
+async def introspect(
+    request: Request,
+    credentials: t.Annotated[HTTPAuthorizationCredentials, Depends(AccessToken())],
+):
+    """
+    This endpoint recieves an access token via HTTP Bearer authentication and returns information about its
+    authorization context.
+
+    > [!note]
+      See also: [RFC 7662](https://datatracker.ietf.org/doc/html/rfc7662)
+    """
+    inactive_resp = {"active": False}
+
+    oidc_metadata = utils.get_discovery_info(request)
+
+    try:
+        access_token = TakagiAccessToken.from_jwt(
+            credentials.credentials,
+            iss={"essential": True, "value": oidc_metadata["issuer"]},
+            aud={"essential": True, "value": oidc_metadata["issuer"]},
+        )
+
+        access_info = access_token.access_info
+    except (JoseError, ValueError):
+        return inactive_resp
+
+    async with utils.get_httpx_client() as github:
+        resp = await github.post(
+            f"/applications/{access_info.client_id}/token",
+            json={"access_token": access_info.raw_token},
+            auth=(access_info.client_id, access_info.client_secret),
+        )
+
+    if resp.status_code == 404:
+        return inactive_resp
+
+    check_result = resp.raise_for_status().json()
+
+    return {
+        "active": True,
+        "client_id": access_info.client_id,
+        "username": check_result["user"]["login"],
+        "scope": list_to_scope(access_info.scopes),
+        "sub": access_info.client_id,
+        "aud": oidc_metadata["issuer"],
+        "iss": oidc_metadata["issuer"],
+        "iat": access_token.iat,
+        "exp": access_token.exp,
+    }
+
+
+@app.post(
     "/revoke",
     summary="Token Revocation",
     responses={code: {"model": r.HTTPClientErrorResponse} for code in [400, 401, 404]},
@@ -446,6 +503,8 @@ async def revoke(
 ):
     """
     This endpoint revokes a single access token.
+
+    Client credentials must be provided via HTTP Basic authentication.
     """
     await security.revoke(
         mode="token",
@@ -477,6 +536,8 @@ async def deauthorize(
 ):
     """
     This endpoint revokes an app's authorization for the user associated with the provided access token.
+
+    Client credentials must be provided via HTTP Basic authentication.
     """
     await security.revoke(
         mode="authorization",

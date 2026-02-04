@@ -101,6 +101,7 @@ Frankly, if you're reading this then you should already know how this works.
 | Authorization                   | `/authorize`                        |
 | Token                           | `/token`                            |
 | User Info                       | `/userinfo`                         |
+| Introspection                   | `/introspect`                       |
 | Revocation                      | `/revoke`                           |
 | Deauthorization                 | `/deauthorize`                      |
 | JSON Web Key Set                | `/.well-known/jwks.json`            |
