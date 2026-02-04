@@ -101,7 +101,7 @@ def get_discovery_info(request: Request) -> dict:
             "client_secret_basic",
             "client_secret_post",
         ],
-        "response_types_supported": ["token", "id_token"],
+        "response_types_supported": ["code"],
         "subject_types_supported": ["public"],
         "scopes_supported": ["openid", "profile", "email", "groups"],
     }

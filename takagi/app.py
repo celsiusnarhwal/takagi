@@ -30,7 +30,6 @@ from takagi.serializable import (
 )
 from takagi.settings import settings
 
-# TODO enforce grant and response types(?)
 app = FastAPI(
     title="Takagi",
     description="Takagi lets you use GitHub as an OpenID Connect provider. "
@@ -128,6 +127,7 @@ def health():
     return
 
 
+# noinspection PyUnusedLocal
 @app.get(
     "/authorize",
     summary="Authorization",
@@ -152,6 +152,9 @@ async def authorize(
             if not settings().fix_redirect_uris
             else "",
         ),
+    ],
+    response_type: t.Annotated[
+        t.Literal["code"], Query(title="Response Type", description="Must be `code`.")
     ],
     state: str = None,
     nonce: str = None,
@@ -277,6 +280,7 @@ async def callback(
     return RedirectResponse(full_redirect_uri, status_code=302)
 
 
+# noinspection PyUnusedLocal
 @app.post(
     "/token",
     summary="Token",
