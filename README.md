@@ -155,7 +155,7 @@ Takagi-issued access tokens include the following claims:
 |-----------|--------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|
 | `iss`     | The URL at which the client accessed Takagi.                                                                                         | None                                          |
 | `sub`     | The ID of the user's GitHub account.                                                                                                 | None                                          |
-| `aud`     | The URL of Takagi's `/userinfo` endpoint.                                                                                            | None                                          |
+| `aud`     | Same as `iss`.                                                                                                                       | None                                          |
 | `iat`     | The [Unix time](https://en.wikipedia.org/wiki/Unix_time) at which the token was issued.                                              | None                                          |
 | `exp`     | The [Unix time](https://en.wikipedia.org/wiki/Unix_time) past which the token should be considered expired and thus no longer valid. | None                                          |
 | `token`   | The OAuth2 access token granted by GitHub. This token is encrypted and only usable by Takagi.                                        | None                                          |
