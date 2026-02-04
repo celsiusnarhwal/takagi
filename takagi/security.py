@@ -188,7 +188,7 @@ async def create_tokens(
         )
 
         if organizations:
-            identity_claims["groups"] = [str(org["id"]) for org in organizations]
+            identity_claims["groups"] = [f"org:{org['id']}" for org in organizations]
 
     if nonce is not None:
         identity_claims["nonce"] = nonce
