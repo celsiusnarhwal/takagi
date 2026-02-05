@@ -38,7 +38,7 @@ app = FastAPI(
         "url": "https://github.com/celsiusnarhwal/takagi/blob/main/LICENSE.md",
     },
     root_path=settings().base_path,
-    version="2.0.0",
+    version="1.0.0",
     docs_url=None,
     redoc_url=None,
     openapi_url="/openapi.json" if settings().enable_docs else None,
