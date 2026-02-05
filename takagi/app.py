@@ -359,6 +359,13 @@ async def token(
 
     github_token = await github.fetch_access_token(**token_params)
 
+    if not github_token["access_token"].startswith("gho_"):
+        raise HTTPException(
+            400,
+            "Takagi only supports OAuth apps. It does not support GitHub apps, "
+            "even if they're using the OAuth flow.",
+        )
+
     return await security.create_tokens(
         github=github,
         github_token=github_token,
@@ -523,6 +530,7 @@ async def deauthorize(
     access_token: t.Annotated[
         str,
         Form(
+            alias="token",
             validation_alias="token",
             title="Access Token",
             description="An access token received from the `/token` endpoint.",
