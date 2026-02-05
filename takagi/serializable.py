@@ -99,7 +99,7 @@ class TakagiAccessToken(JWT):
 
     @computed_field
     @property
-    def aud(self) -> dict:
+    def aud(self) -> str:
         return self.iss
 
     @property
