@@ -92,8 +92,8 @@ def get_discovery_info(request: Request) -> dict:
         "issuer": str(request.base_url),
         "authorization_endpoint": str(request.url_for("authorize")),
         "token_endpoint": str(request.url_for("token")),
-        "revocation_endpoint": str(request.url_for("revoke")),
         "userinfo_endpoint": str(request.url_for("userinfo")),
+        "revocation_endpoint": str(request.url_for("revoke")),
         "introspection_endpoint": str(request.url_for("introspect")),
         "jwks_uri": str(request.url_for("jwks")),
         "claims_supported": [

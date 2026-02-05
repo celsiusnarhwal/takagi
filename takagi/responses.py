@@ -62,6 +62,8 @@ class DiscoveryResponse(BaseModel, title="OpenID Connect Discovery"):
     authorization_endpoint: HttpUrl
     token_endpoint: HttpUrl
     userinfo_endpoint: HttpUrl = Field(title="User Info Endpoint")
+    revocation_endpoint: HttpUrl
+    introspection_endpoint: HttpUrl
     jwks_uri: HttpUrl = Field(title="JWKS URI")
     claims_supported: list[str]
     grant_types_supported: list[str]
