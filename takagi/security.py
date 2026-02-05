@@ -234,9 +234,6 @@ async def revoke(
     except (JoseError, ValueError):
         raise HTTPException(401)
 
-    if not credentials.password:
-        raise HTTPException(400, "Client secret is required")
-
     async with utils.get_httpx_client() as github:
         (
             await github.request(
