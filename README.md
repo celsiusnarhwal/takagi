@@ -264,7 +264,7 @@ If you think Takagi's private keys have been compromised, you can rotate them wi
 docker exec takagi rotate
 ```
 
-This only has any effect if Takagi is its managing its own keys. If you're using custom private keys, you'll have to 
+This only has any effect if Takagi is managing its own keys. If you're using custom private keys, you'll have to 
 change them manually.
 
 > [!warning]
