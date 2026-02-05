@@ -306,14 +306,14 @@ async def token(
             title="Authorization Code",
         ),
     ],
-    client_id: t.Annotated[str, Form(title="Client ID")] = None,
-    client_secret: t.Annotated[str, Form()] = None,
     redirect_uri: t.Annotated[
         str,
         Form(
             title="Redirect URI",
         ),
-    ] = None,
+    ],
+    client_id: t.Annotated[str, Form(title="Client ID")] = None,
+    client_secret: t.Annotated[str, Form()] = None,
 ):
     """
     Clients obtain tokens from this endpoint.
@@ -347,11 +347,6 @@ async def token(
     github = utils.get_oauth_client(client_id=client_id, client_secret=client_secret)
 
     authorization_data = TakagiAuthorizationData.from_jwt(code)
-
-    if redirect_uri is None and authorization_data.redirect_uri:
-        raise HTTPException(
-            400, "Redirect URI is required since it was sent at authorization"
-        )
 
     token_params = {
         **(await request.form()),

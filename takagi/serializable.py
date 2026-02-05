@@ -32,7 +32,7 @@ class JWT(BaseModel):
 
 
 class TakagiStateData(JWT):
-    redirect_uri: str | None
+    redirect_uri: str
     state: str | None
     nonce: str | None
     scopes: list[str] | None
@@ -58,7 +58,7 @@ class TakagiStateData(JWT):
 
 class TakagiAuthorizationData(JWT):
     code: str
-    redirect_uri: str | None
+    redirect_uri: str
     nonce: str | None
     scopes: list[str] | None
 
