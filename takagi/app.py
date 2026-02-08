@@ -291,7 +291,7 @@ async def token(
     request: Request,
     credentials: t.Annotated[
         HTTPBasicCredentials,
-        Depends(ClientCredentials()),
+        Depends(ClientCredentials(auto_error=False)),
     ],
     grant_type: t.Annotated[
         t.Literal["authorization_code"],
