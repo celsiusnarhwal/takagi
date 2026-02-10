@@ -8,9 +8,7 @@ Takagi adheres to [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- The `/authorize` now accepts a boolean `return` parameter. If explicitly set to `true` or `false`, Takagi
-will behave for that authorization request as it would if `TAKAGI_RETURN_TO_REFERRER` was
-set to the same value (see [Configuration](https://github.com/celsiusnarhwal/takagi/tree/main?tab=readme-ov-file#configuration)).
+- The `/authorize` now accepts a boolean `return` parameter. This parameter allows `TAKAGI_RETURN_TO_REFERRER` to be overriden on a per-request basis (see [Configuration](https://github.com/celsiusnarhwal/takagi/tree/main?tab=readme-ov-file#configuration)).
 
 ### Fixed
 
