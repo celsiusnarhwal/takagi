@@ -11,28 +11,74 @@ class TokenResponse(BaseModel, title="Token"):
 
 
 class UserInfoResponse(BaseModel, title="User Info"):
-    sub: str = Field(title="Subject")
-    preferred_username: str = None
-    name: str = None
-    nickname: str = None
-    picture: HttpUrl = None
-    profile: HttpUrl = None
-    updated_at: int = None
-    email: str = None
-    email_verified: bool = None
-    groups: list[str] = None
+    sub: str = Field(
+        title="Subject", description="The ID of the user's GitHub account."
+    )
+    preferred_username: str = Field(
+        None, description="The username of the user's GitHub account."
+    )
+    name: str = Field(
+        None, description="The display name of the user's GitHub account."
+    )
+    nickname: str = Field(None, description="Same as `name`.")
+    picture: HttpUrl = Field(None, description="The URL of the user's GitHub avatar.")
+    profile: HttpUrl = Field(None, description="The URL of the user's GitHub profile.")
+    updated_at: int = Field(
+        None,
+        description="The [Unix time](https://en.wikipedia.org/wiki/Unix_time) "
+        "at which the user's profile was last updated.",
+    )
+    email: str = Field(
+        None,
+        description="The primary email address associated with the user's GitHUb account.",
+    )
+    email_verified: bool = Field(
+        None,
+        description="Whether the primary email address associated with the user's GitHub account is verified.",
+    )
+    groups: list[str] = Field(
+        None,
+        description="A list of IDs of organizations the user is a member of and has granted your "
+        "application access to. Each ID is prefixed with `org:`.",
+    )
 
 
 class IntrospectionResponse(BaseModel, title="Introspection"):
-    active: bool
-    client_id: str = None
-    username: str = None
-    scope: str = None
-    sub: str = None
-    aud: str = None
-    iss: str = None
-    iat: int = None
-    exp: int = None
+    active: bool = Field(description="Whether the access token is valid.")
+    client_id: str = Field(
+        None,
+        title="Client ID",
+        description="The client ID of the application the token was authorized for.",
+    )
+    username: str = Field(
+        None,
+        description="The GitHub username of the user associated with the access token.",
+    )
+    scope: str = Field(
+        None,
+        description="A space-separated list of scopes the access token was authorized with.",
+    )
+    sub: str = Field(
+        None,
+        title="Subject",
+        description="The GitHub user ID of the user associated with the access token.",
+    )
+    iss: str = Field(None, title="Issuer", description="Same as `aud`.")
+    aud: str = Field(
+        None,
+        title="Audience",
+        description="The URL at which Takagi was accessed when the access token was authorized.",
+    )
+    iat: int = Field(
+        None,
+        title="Issued At",
+        description="The [Unix time](https://en.wikipedia.org/wiki/Unix_time) at which the access token was issued.",
+    )
+    exp: int = Field(
+        None,
+        title="Expires At",
+        description="The [Unix time](https://en.wikipedia.org/wiki/Unix_time) at which the access token expires.",
+    )
 
 
 class JWKSResponse(BaseModel, title="JSON Web Key Set"):
