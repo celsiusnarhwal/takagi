@@ -486,7 +486,7 @@ async def introspect(
         "client_id": access_info.client_id,
         "username": check_result["user"]["login"],
         "scope": list_to_scope(access_info.scopes),
-        "sub": access_info.client_id,
+        "sub": str(check_result["user"]["id"]),
         "aud": oidc_metadata["issuer"],
         "iss": oidc_metadata["issuer"],
         "iat": access_token.iat,
