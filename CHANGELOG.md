@@ -4,6 +4,19 @@ Notable changes to Takagi are documented here.
 
 Takagi adheres to [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## <a name="1-1-0">1.1.0 — 2026-02-10</a>
+
+### Added
+
+- The `/authorize` now accepts a boolean `return` parameter. If explicitly set to `true` or `false`, Takagi
+will behave for that authorization request as it would if `TAKAGI_RETURN_TO_REFERRER` was
+set to the same value (see [Configuration](https://github.com/celsiusnarhwal/takagi/tree/main?tab=readme-ov-file#configuration)).
+
+### Fixed
+
+- Fixed an error in which the `/introspect` endpoint would return the application's client ID for the `sub` claim
+instead of the user ID of the token owner.
+
 ## <a name="1-0-1">1.0.1 — 2026-02-08</a>
 
 ### Fixed
