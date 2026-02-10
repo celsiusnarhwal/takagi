@@ -37,6 +37,7 @@ class TakagiStateData(JWT):
     nonce: str | None
     scopes: list[str] | None
     referrer: str | None
+    return_to_referrer: bool | None
 
     @computed_field
     @property

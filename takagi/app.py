@@ -157,6 +157,15 @@ async def authorize(
     ],
     state: str = None,
     nonce: str = None,
+    return_to_referrer: t.Annotated[
+        bool,
+        Query(
+            title="Return to Referrer",
+            alias="return",
+            description="Whether to return to the originating URL if authorization is denied. If provided, this "
+            "overrides the `TAKAGI_RETURN_TO_REFERRER` environment variable.",
+        ),
+    ] = None,
     referrer: t.Annotated[
         str | None, Header(alias="referer", include_in_schema=False)
     ] = None,
@@ -199,6 +208,9 @@ async def authorize(
         nonce=nonce,
         scopes=scope_to_list(scope),
         referrer=referrer,
+        return_to_referrer=return_to_referrer
+        if return_to_referrer is not None
+        else settings().return_to_referrer,
     )
 
     authorization_params = {
@@ -244,7 +256,7 @@ async def callback(
     if (
         error == "access_denied"
         and state_data.referrer
-        and settings().return_to_referrer
+        and state_data.return_to_referrer
     ):
         return RedirectResponse(state_data.referrer, status_code=302)
 
