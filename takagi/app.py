@@ -162,6 +162,7 @@ async def authorize(
         Query(
             title="Return to Referrer",
             alias="return",
+            validation_alias="return",
             description="Whether to return to the originating URL if authorization is denied. If provided, this "
             "overrides the `TAKAGI_RETURN_TO_REFERRER` environment variable.",
         ),
